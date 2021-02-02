@@ -3,7 +3,7 @@ use crate::PgPool;
 use anyhow::Result;
 use async_trait::async_trait;
 use sqlx::postgres::PgRow;
-use sqlx::Row;
+use sqlx::{Done, Row};
 
 #[async_trait]
 pub trait SimpleClient {
@@ -62,7 +62,8 @@ impl SimpleClient for PgPool {
         .bind(titles)
         .bind(rate_changes)
         .execute(self)
-        .await?;
+        .await?
+        .rows_affected();
 
         Ok(result as usize)
     }
@@ -94,7 +95,8 @@ impl SimpleClient for PgPool {
         .bind(contest_ids)
         .bind(titles)
         .execute(self)
-        .await?;
+        .await?
+        .rows_affected();
 
         Ok(result as usize)
     }

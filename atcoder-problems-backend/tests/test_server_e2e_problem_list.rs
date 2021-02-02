@@ -1,5 +1,5 @@
-use anyhow::Result;
 use atcoder_problems_backend::server::{run_server, Authentication};
+use tide::Result;
 
 use async_std::future::ready;
 use async_std::prelude::*;
@@ -23,13 +23,13 @@ impl Authentication for MockAuth {
     async fn get_token(&self, code: &str) -> Result<String> {
         match code {
             VALID_CODE => Ok(VALID_TOKEN.to_owned()),
-            _ => Err(anyhow::anyhow!("error")),
+            _ => Err(anyhow::anyhow!("error").into()),
         }
     }
     async fn get_user_id(&self, token: &str) -> Result<GitHubUserResponse> {
         match token {
             VALID_TOKEN => Ok(GitHubUserResponse::default()),
-            _ => Err(anyhow::anyhow!("error")),
+            _ => Err(anyhow::anyhow!("error").into()),
         }
     }
 }

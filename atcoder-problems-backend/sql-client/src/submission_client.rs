@@ -2,9 +2,8 @@ use crate::models::Submission;
 use crate::PgPool;
 use anyhow::Result;
 use async_trait::async_trait;
-use sqlx::postgres::PgQueryAs;
 use sqlx::postgres::PgRow;
-use sqlx::Row;
+use sqlx::{Done, Row};
 use std::collections::BTreeMap;
 
 const SUBMISSION_LIMIT: i64 = 10000;
@@ -287,7 +286,9 @@ impl SubmissionClient for PgPool {
         .bind(results)
         .bind(execution_times)
         .execute(self)
-        .await?;
+        .await?
+        .rows_affected();
+
         Ok(count as usize)
     }
 
